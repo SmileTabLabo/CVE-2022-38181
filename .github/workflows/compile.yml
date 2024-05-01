@@ -1,0 +1,27 @@
+name: Compile
+
+on:
+  push:
+    paths:
+      - '*.c'
+      - '*.h'
+      - '.github/workflows/compile.yml'
+  workflow_dispatch:
+
+jobs:
+  compile:
+    name: Compile
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile
+        run: $ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi28-clang -DSHELL mali_shrinker_mmap32.c -o shrinker
+
+      - name: Uplaod
+        uses: actions/upload-artifact@v4
+        with:
+          name: CVE-2022-38181
+          path: shrinker
